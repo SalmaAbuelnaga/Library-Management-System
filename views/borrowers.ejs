@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Borrowers</title>
+  <%- include('./nav.ejs'); %>
+</head>
+
+<body>
+  <h2>List of borrowers</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Register Date</th>
+        <th scope="col">Borrowed Books</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% borrowers.forEach(borrower=> { %>
+        <tr>
+          <th scope="row">
+            <%= borrower.id %>
+          </th>
+          <td>
+            <%= borrower.name %>
+          </td>
+          <td>
+            <%= borrower.email %>
+          </td>
+          <td>
+            <%= borrower.registerDate %>
+          </td>
+          <td>
+            <form action="/borrowers/borrowedbooks/<%= borrower.id %>?" method="get">
+              <button class="btn btn-danger" type="submit">Borrowed Books</button>
+            </form>
+          </td>
+          <td>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+              data-bs-target="#editModal<%= borrower.id %>">
+              Edit
+            </button>
+
+            <div class="modal fade" id="editModal<%= borrower.id %>" tabindex="-1" role="dialog"
+              aria-labelledby="editModalLabel<%= borrower.id %>" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel<%= borrower.id %>">Edit Borrower</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- Edit Form -->
+                    <form action="/borrowers/update/<%= borrower.id %>?_method=PUT" method="POST">
+                      <label for="editName<%= borrower.id %>">Title:</label>
+                      <input type="text" class="form-control" id="editName<%= borrower.id %>" name="name"
+                        value="<%= borrower.name %>">
+
+                      <label for="editEmail<%= borrower.id %>">Email:</label>
+                      <input type="text" class="form-control" id="editEmail<%= borrower.id %>" name="email"
+                        value="<%= borrower.email %>">
+
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <form action="/borrowers/delete/<%= borrower.id %>?_method=DELETE" method="POST">
+              <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+    </tbody>
+  </table>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Add a new borrower
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add a borrower</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <%- include('./addBorrower.ejs'); %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
